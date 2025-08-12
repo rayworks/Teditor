@@ -250,3 +250,28 @@ void reserve_line_cap(Line *ln, size_t x) {
     }
 }
 
+void search_fwd(Buffer* buf, const char* pat) {
+    size_t x_offset = buf->cursor.x_width;
+    size_t y_pos = buf->cursor.y;
+    char* curr_line = buf->lines[y_pos].data;
+    char* sub = strstr(curr_line + x_offset, pat);
+
+    if (sub == NULL) {
+        y_pos++;
+        for (; y_pos < buf->num_lines; y_pos++) {
+            curr_line = buf->lines[y_pos].data;
+            sub = strstr(curr_line, pat);
+            if (sub != NULL) {
+                break;
+            }
+        }
+    }
+
+    if (sub != NULL) {
+        size_t x_pos = wi_to_gi(sub - curr_line, curr_line);
+        buf->cursor.x_width = gi_to_wi(x_pos, curr_line);
+        buf->cursor.y = y_pos;
+        recalc_cur(buf);
+    }
+}
+

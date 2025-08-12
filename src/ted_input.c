@@ -23,6 +23,9 @@ void process_keypress(int c) {
     case ctrl('c'): {
         parse_command("close");
         break;
+    } case ctrl('r'): {
+        parse_command("search");
+        break;
     } case ctrl('z'): {
         parse_command("prev");
         break;

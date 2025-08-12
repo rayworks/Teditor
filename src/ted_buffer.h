@@ -73,6 +73,7 @@ bool modify_buffer(Buffer *buf);
 void add_char(Grapheme c, size_t x, Line *ln);
 void remove_char(size_t x, Line *ln);
 void reserve_line_cap(Line *ln, size_t x);
+void search_fwd(Buffer* buf, const char* pat);
 
 
 #endif

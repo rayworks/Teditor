@@ -73,6 +73,16 @@ DEF_COMMAND(close_buffer, {
     buffer_close();
 })
 
+DEF_COMMAND(search, {
+    char msg[MSG_SZ] = "Keyword to be searched: ";
+    prompt_hints(msg, "input the keyword", NULL);
+    if (0 == strcmp("", msg)) {
+        return;
+    }
+
+    search_fwd(&SEL_BUF, msg);
+})
+
 struct {
     const char *name;
     void (*function)(char *words);
@@ -86,6 +96,7 @@ struct {
     {"next"       , next        },
     {"prev"       , prev        },
     {"close"      , close_buffer},
+    {"search"     , search},
     {NULL, NULL}
 };
 
@@ -99,6 +110,7 @@ Hints hints[] = {
     {"next"       , ""                       },
     {"prev"       , ""                       },
     {"close"      , ""                       },
+    {"search"     , "<keyword>"             },
     {NULL, NULL}
 };
 
