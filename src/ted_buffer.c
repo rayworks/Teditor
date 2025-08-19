@@ -271,13 +271,7 @@ void search_fwd(Buffer* buf, const char* pat) {
         buf->cursor.x_bytes = sub - curr_line;
 
         // calc visual width position
-        char *temp_ptr = curr_line;
-        buf->cursor.x_width = 0;
-        while (temp_ptr < sub) {
-            Grapheme g = get_next_grapheme(&temp_ptr, SIZE_MAX);
-            buf->cursor.x_width += grapheme_width(g);
-        }
-
+        buf->cursor.x_width = wi_to_gi(buf->cursor.x_bytes, curr_line);
         buf->cursor.y = y_pos;
         recalc_cur(buf);
     }
