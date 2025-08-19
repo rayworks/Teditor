@@ -251,7 +251,7 @@ void reserve_line_cap(Line *ln, size_t x) {
 }
 
 void search_fwd(Buffer* buf, const char* pat) {
-    size_t x_offset = buf->cursor.x_width;
+    size_t x_offset = buf->cursor.x_bytes;
     size_t y_pos = buf->cursor.y;
     char* curr_line = buf->lines[y_pos].data;
     char* sub = strstr(curr_line + x_offset, pat);
@@ -268,8 +268,16 @@ void search_fwd(Buffer* buf, const char* pat) {
     }
 
     if (sub != NULL) {
-        size_t x_pos = wi_to_gi(sub - curr_line, curr_line);
-        buf->cursor.x_width = gi_to_wi(x_pos, curr_line);
+        buf->cursor.x_bytes = sub - curr_line;
+
+        // calc visual width position
+        char *temp_ptr = curr_line;
+        buf->cursor.x_width = 0;
+        while (temp_ptr < sub) {
+            Grapheme g = get_next_grapheme(&temp_ptr, SIZE_MAX);
+            buf->cursor.x_width += grapheme_width(g);
+        }
+
         buf->cursor.y = y_pos;
         recalc_cur(buf);
     }
