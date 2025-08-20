@@ -279,7 +279,7 @@ void search_fwd(Buffer* buf, const char* pat) {
             Grapheme g = get_next_grapheme(&temp_ptr, SIZE_MAX);
             x += grapheme_width(g);
         }
-        buf->cursor.x_width = wi_to_gi(x, curr_line);
+        buf->cursor.x_width = gi_to_wi(x, curr_line);
         buf->cursor.y = y_pos;
 
         recalc_cur(buf);
