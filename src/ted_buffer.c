@@ -270,9 +270,18 @@ void search_fwd(Buffer* buf, const char* pat) {
     if (sub != NULL) {
         buf->cursor.x_bytes = sub - curr_line;
 
+        // the index of the grapheme cluster the cursor is at
+        size_t x = 0;
+
         // calc visual width position
-        buf->cursor.x_width = wi_to_gi(buf->cursor.x_bytes, curr_line);
+        char *temp_ptr = curr_line;
+        while (temp_ptr < sub) {
+            Grapheme g = get_next_grapheme(&temp_ptr, SIZE_MAX);
+            x += grapheme_width(g);
+        }
+        buf->cursor.x_width = wi_to_gi(x, curr_line);
         buf->cursor.y = y_pos;
+
         recalc_cur(buf);
     }
 }
